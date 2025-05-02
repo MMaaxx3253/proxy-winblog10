@@ -3,31 +3,39 @@ exports.handler = async function(event, context) {
   if (!url) {
     return {
       statusCode: 400,
-      body: 'Missing URL parameter'
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: "Missing URL parameter"
     };
   }
 
   try {
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0',
-        'Accept': '*/*'
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "*/*"
       }
     });
-    const data = await res.text();
+
+    const contentType = res.headers.get("content-type") || "text/plain";
+    const text = await res.text();
 
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': res.headers.get('content-type') || 'text/plain'
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": contentType
       },
-      body: data
+      body: text
     };
   } catch (err) {
     return {
       statusCode: 500,
-      body: 'Fetch failed: ' + err.toString()
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: "Fetch failed: " + err.toString()
     };
   }
 };
