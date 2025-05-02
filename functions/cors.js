@@ -8,7 +8,12 @@ exports.handler = async function(event, context) {
   }
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept': '*/*'
+      }
+    });
     const data = await res.text();
 
     return {
